@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>k-dimensional trees</title>
+    <link rel="stylesheet" type="text/css" href="/public/stylesheets/styles.css">
+    <link rel="apple-touch-icon-precomposed" href="/public/images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <meta name="description" content="Visualizing nearest neighbor search by k-dimensional tree traversal" />
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" value="summary">
+    <meta name="twitter:title" content="k-dimensional trees">
+    <meta name="twitter:description" content="Visualizing nearest neighbor search by k-dimensional tree traversal">
+    <meta name="twitter:image" content="https://nathanielwroblewski.github.io/kd-tree/screenshot.png">
+
+    <!-- Open Graph data -->
+    <meta property="og:title" content="k-dimensional trees" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://nathanielwroblewski.github.io/kd-tree" />
+    <meta property="og:image" content="https://nathanielwroblewski.github.io/kd-tree/screenshot.png" />
+    <meta property="og:description" content="Visualizing nearest neighbor search by k-dimensional tree traversal" />
+    <meta property="og:site_name" content="k-dimensional trees" />
+
+    <!-- Schema.org markup for Google+ -->
+    <meta itemprop="name" content="k-dimensional trees">
+    <meta itemprop="description" content="Visualizing nearest neighbor search by k-dimensional tree traversal">
+    <meta itemprop="image" content="https://nathanielwroblewski.github.io/kd-tree/screenshot.png">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">Nearest neighbor search</h1>
+      <p class="subtitle">
+        by k-dimensional tree traversal
+      </p>
+      <section>
+        <p class="text">
+          <defn>Nearest neighbor search</defn> (NNS) is a common optimization problem of finding the point in a given set that is closest or most similar to a given query point.  Closeness is typically expressed in terms of a dissimilarity function: the less similar the objects, the larger the function values.  More formally, given a set <i>S</i> of <i>n</i> data points in a metric space <i>X</i> the nearest-neighbor search problem is defined as pre-processing these points so that given any query point <i>q ∈ X</i>, the data point nearest to <i>q</i> can be reported quickly.
+        </p>
+        <figure class="figure one">
+          <figcaption class="figure-title text">
+            Fig. 1: Nearest neighbor search via kd-tree traversal
+          </figcaption>
+          <div class="canvas-container">
+            <canvas class="background" width="600px" height="400px"></canvas>
+            <canvas class="points" width="600px" height="400px"></canvas>
+          </div>
+        </figure>
+        <p class="text">
+          There are many possible choices of the metric space and the dissimilarity function, but most commonly, the space is &#8477;<sup><i>d</i></sup> real <i>d</i>-dimensional space where dissimilarity is expressed as a Minkowski <i>L<sub>m</sub></i> distance metric.  For any integer <i>m</i> &ge; 1, the <i>L<sub>m</sub></i>-distance between points <i>p</i> = (<i>p</i><sub>1</sub>, <i>p</i><sub>2</sub>, …, <i>p</i><sub>d</sub>) and <i>q</i> = (<i>q</i><sub>1</sub>, <i>q</i><sub>2</sub>, …, <i>q</i><sub>d</sub>) in &#8477;<sup><i>d</i></sup> is defined to be the <i>m</i>-th root of &Sigma;<sub>1 &ge; i &ge; <i>d</i></sub>|<i>p<sub>i</sub> - q<sub>i</sub></i>|<sup><i>m</i></sup>.  The <i>L<sub>1</sub></i>, <i>L<sub>2</sub></i>, and <i>L<sub>∞</sub></i> metrics are the well-known Manhattan, Euclidean, and max metrics respectively.
+        <p class="text">
+          NNS has applications in many areas including knowledge discovery and data mining, pattern recognition and classification, machine learning, data compression, multimedia databases, document retrieval, and statistics. NNS was also among the first algorithms employed in solving the travelling salesman problem: starting at a random city, repeatedly visit the nearest city until all cities have been visited.
+        </p>
+        <p class="text">
+          Here, we restrict attention to solutions using data structures of size <i>O(dn)</i> based on hierarchical spatial decompositions, and, in particular, the kd-tree because of the simplicity and widespread popularity of this data structure. A <defn><i>k</i>d-tree</defn> is binary tree that hierarchically subdivides <i>k</i>-dimensional space with hyperplanes orthogonal to the coordinate axes. There are, however, a number of other data structures for nearest neighbor searching based on hierarchical spatial decompositions: vp-trees, R-trees, X-trees, SR-trees, TV-trees, etc.
+        </p>
+        <p class="text">
+          A key issue in the design of the kd-tree is the choice of the splitting hyperplane. Friedman, Bentley, and Finkel proposed a splitting method based on selecting the plane orthogonal to the median coordinate along which the points have the greatest spread. Another common alternative uses the shape of the cell, rather than the distribution of the data points, and it splits each cell through its midpoint by a hyperplane orthogonal to its longest side. Yet another splitting method was introduced by Mount and Arya in the ANN library for approximate nearest neighbor searching. They proposed a method of sliding the splitting plane toward any remaining points when the subcells are empty.  When data is highly clustered in low dimensional subspaces, this approach may alleviate slower query times by preventing the formation of highly enlongated subcells.
+        </p>
+        <figure class="figure two">
+          <figcaption class="figure-title text">
+            Fig. 2: kd-tree partitioning by median
+          </figcaption>
+          <div class="canvas-container">
+            <canvas class="background" width="600px" height="400px"></canvas>
+            <canvas class="partitions" width="600px" height="400px"></canvas>
+          </div>
+          <canvas class="tree" width="600px" height="400px"></canvas>
+        </figure>
+        <p class="text">
+          In the canonical method of kd-tree construction, as one traverses down the tree, one cycles through the axes used to select the splitting planes. For example, in a three-dimensional kd-tree, the root may have an x-aligned splitting plane, the root's children may have y-aligned planes, the root's grandchildren may all have z-aligned planes, and the root's great-grandchildren may all have x-aligned planes.  Points are then inserted by selecting the median of the points being put into the subtree, with respect to their coordinates in the axis being used to create the splitting plane.  This method leads to a balanced kd-tree, in which each leaf node is approximately the same distance from the root.
+        </p>
+        <figure class="figure three">
+          <figcaption class="figure-title text">
+            Fig. 3: Nearest neighbor search by kd-tree traversal
+          </figcaption>
+          <div class="canvas-container">
+            <canvas class="background" width="600px" height="400px"></canvas>
+            <canvas class="point" width="600px" height="400px"></canvas>
+          </div>
+          <div class="canvas-container">
+            <canvas class="tree-background" width="600px" height="400px"></canvas>
+            <canvas class="traversal" width="600px" height="400px"></canvas>
+          </div>
+        </figure>
+        <p class="text">
+          Once the tree is constructed, a nearest neighbor can be found efficiently by using the tree properties to quickly eliminate large portions of the search space. Starting with the root node, the tree is traversed recursively, and the branch to descend is selected by comparing the query point to the current node along the splitting dimension. Upon reaching a leaf node, the distance is calculated, and the current node is propagated upwards as the current best.  As the recursion unwinds, a new current best may be propagated upward if the current node or the nodes on either side of the splitting plane are closer.
+        </p>
+        <p class="text">
+          Conceptually, this is accomplished by intersecting the splitting hyperplane with a hypersphere around the search point that has a radius equal to the current nearest distance. If the hypersphere crosses the plane, there may be nearer points on the other side of the plane, so the other branch is traversed for closer points.  If the hypersphere fails to intersect the splitting plane, the opposite branch may be eliminated, and the current best propagates upwards.  When the root node is reached, the search is complete.
+        </p>
+      </section>
+    </div>
+  </body>
+  <script type="module" src="/public/javascripts/main.js"></script>
+</html>
