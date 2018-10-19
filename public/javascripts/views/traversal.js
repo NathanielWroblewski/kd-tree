@@ -3,7 +3,7 @@ import { HEIGHT, WIDTH, TAU, NODE_RADIUS } from '../constants/index.js'
 const MIN_X = NODE_RADIUS
 const MAX_X = WIDTH - NODE_RADIUS
 
-const renderEdge = ({ element, source, destination, color = '#ccccc6' }) => {
+const renderEdge = ({ element, source, destination, color = '#666' }) => {
   const context = element.getContext('2d')
 
   if (source && destination) {
@@ -16,7 +16,7 @@ const renderEdge = ({ element, source, destination, color = '#ccccc6' }) => {
   }
 }
 
-const renderNode = ({ element, x, y, color = '#ccccc6' }) => {
+const renderNode = ({ element, x, y, color = '#666' }) => {
   const context = element.getContext('2d')
 
   context.fillStyle = color
@@ -25,7 +25,7 @@ const renderNode = ({ element, x, y, color = '#ccccc6' }) => {
   context.fill()
 }
 
-const renderTraversal = ({ element, tree, nearest, depth = 0, minX = MIN_X, maxX = MAX_X, parentPosition, color }) => {
+const renderTraversal = ({ element, tree, nearest, depth = 0, minX = MIN_X, maxX = MAX_X, parentPosition, color = '#666' }) => {
   if (!tree) return
 
   const context = element.getContext('2d')

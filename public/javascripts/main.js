@@ -72,7 +72,7 @@ const point = document.querySelector('.point')
 const treeBackground = document.querySelector('.tree-background')
 const traversal = document.querySelector('.traversal')
 const ball = new Particle({ radius: BALL_RADIUS })
-const color = '#6bb9f0';
+const color = '#666'
 
 renderTree({ element: treeBackground, tree: particles.tree, maxDepth: 8 })
 
